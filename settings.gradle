@@ -1,0 +1,26 @@
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url 'https://repo.spring.io/milestone' }
+        maven { url "https://repo.spring.io/snapshot" }
+    }
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "io.spring.javaformat") {
+                useModule "io.spring.javaformat:spring-javaformat-gradle-plugin:${requested.version}"
+            }
+        }
+    }
+}
+
+plugins {
+    id "com.gradle.develocity" version "3.17"
+    id "io.spring.ge.conventions" version "0.0.17"
+}
+
+include ":servlet:spring-boot:java:boot"
+include ":servlet:xml:java:odm"
+include ":servlet:xml:java:plain"
+include ":servlet:xml:java:user-admin"
+

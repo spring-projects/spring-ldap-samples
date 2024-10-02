@@ -1,0 +1,12 @@
+image::https://github.com/spring-projects/spring-ldap-samples/workflows/CI/badge.svg[link=https://github.com/spring-projects/spring-ldap-samples/actions?query=workflow%3ACI]
+
+image::https://img.shields.io/badge/Revved%20up%20by-Develocity-06A0CE?logo=Gradle&labelColor=02303A["Revved up by Develocity", link="https://ge.spring.io/scans?search.rootProjectNames=spring-ldap-samples"]
+
+== Samples catalog
+
+Refer to these sample projects for some examples on using Spring LDAP:
+
+* boot - https://github.com/spring-projects/spring-ldap-samples/tree/main/servlet/spring-boot/java/boot[demonstrates basic Spring Boot usage]
+* plain - https://github.com/spring-projects/spring-ldap-samples/tree/main/servlet/xml/java/plain[demonstrates 'plain' usage of Spring LDAP]
+* odm - https://github.com/spring-projects/spring-ldap-samples/tree/main/servlet/xml/java/odm[demonstrates the Object-Directory mapping functionality]
+* user-admin - https://github.com/spring-projects/spring-ldap-samples/tree/main/servlet/xml/java/user-admin[a fully functional user admin application implemented using Spring LDAP]

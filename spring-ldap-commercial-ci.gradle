@@ -1,0 +1,40 @@
+allprojects {
+	configurations.all {
+		resolutionStrategy {
+			force "org.springframework.ldap:spring-ldap-core:$springLdapVersion"
+			force "org.springframework.ldap:spring-ldap-test:$springLdapVersion"
+		}
+	}
+	repositories {
+		exclusiveContent {
+			forRepository {
+				maven {
+					url "file://$localRepositoryPath"
+				}
+			}
+			filter {
+				includeVersion "org.springframework.ldap", "spring-ldap-core", "$springLdapVersion"
+				includeVersion "org.springframework.ldap", "spring-ldap-test", "$springLdapVersion"
+			}
+		}
+		maven {
+			name = 'artifactory-snapshot'
+			credentials {
+				username project.artifactoryUsername
+				password project.artifactoryPassword
+			}
+			url = 'https://usw1.packages.broadcom.com/spring-enterprise-maven-dev-local'
+		}
+		maven {
+			name = 'artifactory-release'
+			credentials {
+				username project.artifactoryUsername
+				password project.artifactoryPassword
+			}
+			content {
+				excludeGroup('net.minidev')
+			}
+			url = 'https://usw1.packages.broadcom.com/spring-enterprise-maven-prod-local'
+		}
+	}
+}

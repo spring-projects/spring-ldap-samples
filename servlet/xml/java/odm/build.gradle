@@ -1,0 +1,41 @@
+plugins {
+    id 'java-library'
+    id "org.gretty" version "4.0.3"
+    id "war"
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/milestone" }
+}
+
+dependencies {
+    implementation platform(libs.org.springframework.spring.framework.bom)
+    implementation platform(libs.org.springframework.data.spring.data.bom)
+    implementation "org.springframework.data:spring-data-ldap"
+    implementation libs.org.springframework.ldap.spring.ldap.core
+    implementation libs.org.springframework.ldap.spring.ldap.test
+    implementation "org.springframework:spring-context"
+    implementation "org.springframework:spring-webmvc"
+    implementation "commons-lang:commons-lang:2.6"
+    implementation 'com.unboundid:unboundid-ldapsdk:7.0.1'
+    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1'
+    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.1'
+    implementation 'jakarta.servlet.jsp:jakarta.servlet.jsp-api:4.0.0'
+
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.1.0'
+
+    runtimeOnly 'ch.qos.logback:logback-classic:1.5.6'
+
+    testImplementation platform('org.junit:junit-bom:5.10.3')
+    testImplementation "org.springframework:spring-test"
+    testImplementation 'com.unboundid:unboundid-ldapsdk:7.0.1'
+    testImplementation "org.assertj:assertj-core:3.26.3"
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

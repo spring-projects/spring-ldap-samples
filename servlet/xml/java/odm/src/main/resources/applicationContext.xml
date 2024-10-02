@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:ldap="http://www.springframework.org/schema/ldap"
+       xmlns:data-ldap="http://www.springframework.org/schema/data/ldap"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/ldap https://www.springframework.org/schema/ldap/spring-ldap.xsd
+            http://www.springframework.org/schema/data/ldap https://www.springframework.org/schema/data/ldap/spring-ldap.xsd">
+
+    <context:property-placeholder location="classpath:/ldap.properties" />
+
+    <ldap:context-source id="contextSource"
+                         password="${sample.ldap.password}"
+                         url="${sample.ldap.url}"
+                         username="${sample.ldap.userDn}"
+                         base="${sample.ldap.base}" />
+
+    <ldap:ldap-template id="ldapTemplate" context-source-ref="contextSource"/>
+
+    <bean id="ldap" class="org.springframework.ldap.core.LdapClient" factory-method="create">
+        <constructor-arg ref="contextSource"/>
+    </bean>
+
+    <bean id="odm" class="org.springframework.ldap.odm.core.impl.DefaultObjectDirectoryMapper"/>
+
+    <bean id="ldapTreeBuilder" class="org.springframework.ldap.samples.utils.LdapTreeBuilder">
+        <constructor-arg ref="ldap" />
+    </bean>
+
+    <data-ldap:repositories base-package="org.springframework.ldap.samples.odm.repository" />
+
+    <beans profile="default">
+        <!-- Populates the LDAP server with initial data -->
+        <bean class="org.springframework.ldap.test.unboundid.LdifPopulator" depends-on="embeddedLdapServer">
+            <property name="contextSource" ref="contextSource" />
+            <property name="resource" value="classpath:/setup_data.ldif" />
+            <property name="base" value="${sample.ldap.base}" />
+            <property name="clean" value="${sample.ldap.clean}" />
+            <property name="defaultBase" value="dc=jayway,dc=se" />
+        </bean>
+
+        <!--
+            This is for test and demo purposes only - EmbeddedLdapServerFactoryBean launches an in-process
+            LDAP server.
+        -->
+        <bean id="embeddedLdapServer" class="org.springframework.ldap.test.unboundid.EmbeddedLdapServerFactoryBean">
+            <property name="partitionName" value="jayway"/>
+            <property name="partitionSuffix" value="${sample.ldap.base}" />
+            <property name="port" value="18880" />
+        </bean>
+    </beans>
+</beans>

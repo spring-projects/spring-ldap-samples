@@ -1,0 +1,22 @@
+allprojects {
+	configurations.all {
+		resolutionStrategy {
+			force "org.springframework.ldap:spring-ldap-core:$springLdapVersion"
+			force "org.springframework.ldap:spring-ldap-test:$springLdapVersion"
+		}
+	}
+
+	repositories {
+		exclusiveContent {
+			forRepository {
+				maven {
+					url "file://$localRepositoryPath"
+				}
+			}
+			filter {
+				includeVersion "org.springframework.ldap", "spring-ldap-core", "$springLdapVersion"
+				includeVersion "org.springframework.ldap", "spring-ldap-test", "$springLdapVersion"
+			}
+		}
+	}
+}
