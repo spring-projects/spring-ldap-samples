@@ -1,0 +1,72 @@
+= A CRUD Spring LDAP application using Spring Boot
+
+The application is protected by Spring Security and uses an embedded UnboundID container for its LDAP server.
+
+You can authenticate with HTTP basic using `dante`/`secret`:
+
+[source,bash]
+----
+curl --user dante:secret localhost:8080/people
+----
+
+And you should see a response like this one:
+
+[source,bash]
+----
+[
+[
+    {
+        "dn": "uid=dante,ou=people",
+        "lastName": "Alvarez",
+        "username": "dante"
+    },
+    {
+        "dn": "uid=hal,ou=people",
+        "lastName": "Hal",
+        "username": "hal"
+    },
+    {
+        "dn": "uid=may,ou=people",
+        "lastName": "May",
+        "username": "may"
+    },
+    // ...
+}
+----
+
+Or, if you use `hal`/`sorrydave`, you'll see more information:
+
+[source,bash]
+----
+[
+    {
+        "dn": "uid=dante,ou=people",
+        "lastName": "Alvarez",
+        "name": "Dante Alvarez",
+        "username": "dante"
+    },
+    {
+        "dn": "uid=hal,ou=people",
+        "lastName": "Hal",
+        "name": "Hal 2000",
+        "username": "hal"
+    },
+    {
+        "dn": "uid=may,ou=people",
+        "lastName": "May",
+        "name": "May Bea",
+        "username": "may"
+    },
+    // ...
+----
+
+The sample supports the following operations:
+
+* `GET /people` - retrieve all the people in the application
+* `GET /people/uid=may,ou=people` - retrieve May Bea's details; you can replace the DN with another one to see another person's information
+* `GET /people/me` - retrieve the current user's details
+* `POST /people` - add a new person, for example `{ "username": "newuser", "sn": "User", "cn": "New User" }`
+* `PUT /people/uid=may,ou=people` - update May Bea's details, supports partial update; you can replace the DN with another one to make changes to a different entry
+* `DELETE /people/uid=may,ou=people` - remove May Bea from the system; you can replace the DN with another one to remove a different entry
+
+To run the sample, do `./gradlew :bootRun`.

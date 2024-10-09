@@ -11,12 +11,17 @@ repositories {
 	maven { url "https://repo.spring.io/snapshot" }
 }
 
+ext['spring-security.version'] = "6.4.0-SNAPSHOT"
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-data-ldap'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.security:spring-security-ldap'
+	implementation 'com.unboundid:unboundid-ldapsdk:7.0.1'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.withType(Test).configureEach {

@@ -20,6 +20,7 @@ plugins {
 }
 
 include ":servlet:spring-boot:java:boot"
+include ":servlet:spring-boot:java:security"
 include ":servlet:xml:java:odm"
 include ":servlet:xml:java:plain"
 include ":servlet:xml:java:user-admin"

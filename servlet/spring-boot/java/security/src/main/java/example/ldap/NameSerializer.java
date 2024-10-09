@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package example;
+package example.ldap;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import java.io.IOException;
 
-/**
- * Hello application.
- *
- * @author Joe Grandja
- */
-@SpringBootApplication
-public class HelloApplication {
+import javax.naming.Name;
 
-	public static void main(String[] args) {
-		SpringApplication.run(HelloApplication.class, args);
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+
+public class NameSerializer extends JsonSerializer<Name> {
+
+	@Override
+	public void serialize(Name name, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
+			throws IOException {
+		serializerProvider.defaultSerializeValue(name.toString(), jsonGenerator);
 	}
 
 }

@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 
-package example;
+package example.ldap;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import javax.naming.NamingException;
 
-/**
- * Controller for "/".
- *
- * @author Joe Grandja
- */
-@Controller
-public class IndexController {
+import org.springframework.ldap.core.ContextMapper;
+import org.springframework.ldap.core.DirContextOperations;
 
-	@GetMapping("/")
-	public String index() {
-		return "index";
+public interface DirContextOperationsMapper<T> extends ContextMapper<T> {
+
+	@Override
+	default T mapFromContext(Object o) throws NamingException {
+		return mapFromDirContextOperations((DirContextOperations) o);
 	}
+
+	T mapFromDirContextOperations(DirContextOperations source) throws NamingException;
 
 }
