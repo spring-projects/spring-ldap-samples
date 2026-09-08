@@ -1,0 +1,62 @@
+A Hello World Spring LDAP application using Spring Boot and `LdapClient`
+
+This is the same application as the `boot` sample, except that it uses only `LdapClient` instead of `LdapTemplate`.
+
+`LdapClient` is a newer, fluent API for talking to LDAP and is expected to eventually replace `LdapTemplate`.
+
+The application is protected by Spring Security and uses an embedded UnboundID container for its LDAP server.
+
+You can authenticate with HTTP basic using `bob`/`bobspassword`:
+
+[source,bash]
+----
+curl --user bob:bobspassword localhost:8080
+----
+
+And you should see the response:
+
+[source,bash]
+----
+Hello, bob
+----
+
+Also, you can hit the `cn` endpoint, which uses `LdapClient` to query the datastore for the user's `cn` attribute value, like so:
+
+[source,bash]
+----
+curl --user bob:bobspassword localhost:8080/cn
+----
+
+This should result in:
+
+[source,bash]
+----
+[
+    "Bob Hamilton"
+]
+----
+
+The `description` endpoints demonstrate reading and updating an attribute with `LdapClient`:
+
+[source,bash]
+----
+curl --user bob:bobspassword localhost:8080/description
+curl --user bob:bobspassword -X POST --data "Updated by LdapClient" localhost:8080/description
+----
+
+The `fax` endpoints demonstrate updating a *multi-value* attribute -- `bob` starts out with two `facsimileTelephoneNumber` values.
+This attribute has no equality matching rule defined in its schema (see RFC4519), so some LDAP servers reject an attempt to remove just one of several values from it; the server can require the whole attribute to be replaced instead:
+
+[source,bash]
+----
+curl --user bob:bobspassword localhost:8080/fax
+curl --user bob:bobspassword -X POST --data "+1 555 1234567,+1 555 9999999" localhost:8080/fax
+----
+
+That second call drops one of the original two numbers and adds a new one -- exactly the kind of partial multi-value change that would otherwise be expressed as removing one value and adding another.
+
+`LdapClientConfig` instead registers a `dirContextPostProcessor` that calls `DirContextAdapter#setMayRemoveByValue` on every entry the client constructs, forcing `facsimileTelephoneNumber` in particular to always be replaced in its entirety.
+
+`HelloController` never has to know about this -- it just calls `entry.getModificationItems()` after mutating the retrieved entry, the same way it does for `description`.
+
+To run the example, do `./gradlew :bootRun`.
